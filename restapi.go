@@ -1,7 +1,6 @@
-// Discordgo - Discord bindings for Go
-// Available at https://github.com/bwmarrin/discordgo
+// Discordgo - Discord bindings for Go, fork of bwmarrin's cordigo
+// Available at https://github.com/dwood15/cordigo
 
-// Copyright 2015-2016 Bruce Marriner <bruce@sqls.net>.  All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -1712,6 +1711,9 @@ func (s *Session) ChannelMessageSendComplex(channelID string, data *MessageSend,
 		if encodeErr != nil {
 			return st, encodeErr
 		}
+		fmt.Println("Sending request with body...")
+		fmt.Println(string(body))
+		fmt.Println("*************")
 		response, err = s.request("POST", endpoint, contentType, body, endpoint, 0, options...)
 	} else {
 		response, err = s.RequestWithBucketID("POST", endpoint, data, endpoint, options...)
@@ -2889,7 +2891,7 @@ func (s *Session) ThreadsPrivateJoinedArchived(channelID string, before *time.Ti
 // appID       : The application ID.
 // guildID     : Guild ID to create guild-specific application command. If empty - creates global application command.
 // cmd         : New application command data.
-func (s *Session) ApplicationCommandCreate(appID string, guildID string, cmd *ApplicationCommand, options ...RequestOption) (ccmd *ApplicationCommand, err error) {
+func (s *Session) ApplicationCommandCreate(appID, guildID string, cmd *ApplicationCommand, options ...RequestOption) (res *ApplicationCommand, err error) {
 	endpoint := EndpointApplicationGlobalCommands(appID)
 	if guildID != "" {
 		endpoint = EndpointApplicationGuildCommands(appID, guildID)
@@ -2900,7 +2902,7 @@ func (s *Session) ApplicationCommandCreate(appID string, guildID string, cmd *Ap
 		return
 	}
 
-	err = unmarshal(body, &ccmd)
+	err = unmarshal(body, &res)
 
 	return
 }
@@ -2910,7 +2912,7 @@ func (s *Session) ApplicationCommandCreate(appID string, guildID string, cmd *Ap
 // cmdID       : Application command ID to edit.
 // guildID     : Guild ID to edit guild-specific application command. If empty - edits global application command.
 // cmd         : Updated application command data.
-func (s *Session) ApplicationCommandEdit(appID, guildID, cmdID string, cmd *ApplicationCommand, options ...RequestOption) (updated *ApplicationCommand, err error) {
+func (s *Session) ApplicationCommandEdit(appID, guildID, cmdID string, cmd *ApplicationCommand, options ...RequestOption) (res *ApplicationCommand, err error) {
 	endpoint := EndpointApplicationGlobalCommand(appID, cmdID)
 	if guildID != "" {
 		endpoint = EndpointApplicationGuildCommand(appID, guildID, cmdID)
@@ -2921,7 +2923,7 @@ func (s *Session) ApplicationCommandEdit(appID, guildID, cmdID string, cmd *Appl
 		return
 	}
 
-	err = unmarshal(body, &updated)
+	err = unmarshal(body, &res)
 
 	return
 }
@@ -2929,7 +2931,7 @@ func (s *Session) ApplicationCommandEdit(appID, guildID, cmdID string, cmd *Appl
 // ApplicationCommandBulkOverwrite Creates commands overwriting existing commands. Returns a list of commands.
 // appID    : The application ID.
 // commands : The commands to create.
-func (s *Session) ApplicationCommandBulkOverwrite(appID string, guildID string, commands []*ApplicationCommand, options ...RequestOption) (createdCommands []*ApplicationCommand, err error) {
+func (s *Session) ApplicationCommandBulkOverwrite(appID string, guildID string, commands []*ApplicationCommand, options ...RequestOption) (res []*ApplicationCommand, err error) {
 	endpoint := EndpointApplicationGlobalCommands(appID)
 	if guildID != "" {
 		endpoint = EndpointApplicationGuildCommands(appID, guildID)
@@ -2940,7 +2942,7 @@ func (s *Session) ApplicationCommandBulkOverwrite(appID string, guildID string, 
 		return
 	}
 
-	err = unmarshal(body, &createdCommands)
+	err = unmarshal(body, &res)
 
 	return
 }

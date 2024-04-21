@@ -45,6 +45,40 @@ const (
 	MessageTypeContextMenuCommand                    MessageType = 23
 )
 
+type PollEmoji struct {
+	ID string `json:"id"`
+}
+
+type PollMediaObject struct {
+	Text  string     `json:"text"`
+	Emoji *PollEmoji `json:"emoji,omitempty"`
+}
+
+type PollAnswerObject struct {
+	AnswerID  int             `json:"answer_id,omitempty"`
+	PollMedia PollMediaObject `json:"poll_media"`
+}
+
+type PollResultsObject interface{}
+
+type PollObject struct {
+	Question         PollMediaObject    `json:"question"`
+	Answers          []PollAnswerObject `json:"answers"`
+	Expiry           string             `json:"expiry"` //might not be an actual string but who knows?
+	AllowMultiselect bool               `json:"allow_multiselect"`
+	LayoutType       int                `json:"layout_type,omitempty"`
+	Results          *PollResultsObject `json:"results,omitempty"`
+}
+
+type PollCreateObject struct {
+	Question PollMediaObject    `json:"question"`
+	Answers  []PollAnswerObject `json:"answers"`
+	// Duration is the number of hours. Goes up to 7 days.
+	Duration         int  `json:"duration"`
+	AllowMultiselect bool `json:"allow_multiselect"`
+	LayoutType       int  `json:"layout_type,omitempty"` // currently only "1" - the default, is supported
+}
+
 // A Message stores all data related to a specific Discord message.
 type Message struct {
 	// The ID of the message.
@@ -150,6 +184,8 @@ type Message struct {
 
 	// An array of StickerItem objects, representing sent stickers, if there were any.
 	StickerItems []*StickerItem `json:"sticker_items"`
+
+	Poll *PollObject `json:"poll,omitempty"`
 }
 
 // UnmarshalJSON is a helper function to unmarshal the Message.
@@ -245,6 +281,8 @@ type MessageSend struct {
 
 	// TODO: Remove this when compatibility is not required.
 	Embed *MessageEmbed `json:"-"`
+
+	Poll *PollCreateObject `json:"poll,omitempty"`
 }
 
 // MessageEdit is used to chain parameters via ChannelMessageEditComplex, which

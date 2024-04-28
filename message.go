@@ -59,12 +59,21 @@ type PollAnswerObject struct {
 	PollMedia PollMediaObject `json:"poll_media"`
 }
 
-type PollResultsObject interface{}
+type PollAnswerCount struct {
+	ID      int  `json:"id"`
+	Count   int  `json:"count"`
+	MeVoted bool `json:"me_voted"`
+}
+
+type PollResultsObject struct {
+	Finalized    bool               `json:"is_finalized"`
+	AnswerCounts []*PollAnswerCount `json:"answer_count"`
+}
 
 type PollObject struct {
 	Question         PollMediaObject    `json:"question"`
 	Answers          []PollAnswerObject `json:"answers"`
-	Expiry           string             `json:"expiry"` //might not be an actual string but who knows?
+	Expiry           time.Time          `json:"expiry"` //might not be an actual string but who knows?
 	AllowMultiselect bool               `json:"allow_multiselect"`
 	LayoutType       int                `json:"layout_type,omitempty"`
 	Results          *PollResultsObject `json:"results,omitempty"`
@@ -275,14 +284,13 @@ type MessageSend struct {
 	Reference       *MessageReference       `json:"message_reference,omitempty"`
 	StickerIDs      []string                `json:"sticker_ids"`
 	Flags           MessageFlags            `json:"flags,omitempty"`
+	Poll            *PollCreateObject       `json:"poll,omitempty"`
 
 	// TODO: Remove this when compatibility is not required.
 	File *File `json:"-"`
 
 	// TODO: Remove this when compatibility is not required.
 	Embed *MessageEmbed `json:"-"`
-
-	Poll *PollCreateObject `json:"poll,omitempty"`
 }
 
 // MessageEdit is used to chain parameters via ChannelMessageEditComplex, which

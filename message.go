@@ -45,44 +45,10 @@ const (
 	MessageTypeContextMenuCommand                    MessageType = 23
 )
 
-type PollEmoji struct {
-	ID string `json:"id"`
-}
-
-type PollMediaObject struct {
-	Text  string     `json:"text"`
-	Emoji *PollEmoji `json:"emoji,omitempty"`
-}
-
-type PollAnswerObject struct {
-	AnswerID  int             `json:"answer_id,omitempty"`
-	PollMedia PollMediaObject `json:"poll_media"`
-}
-
-type PollAnswerCount struct {
-	ID      int  `json:"id"`
-	Count   int  `json:"count"`
-	MeVoted bool `json:"me_voted"`
-}
-
-type PollResultsObject struct {
-	Finalized    bool               `json:"is_finalized"`
-	AnswerCounts []*PollAnswerCount `json:"answer_count"`
-}
-
-type PollObject struct {
-	Question         PollMediaObject    `json:"question"`
-	Answers          []PollAnswerObject `json:"answers"`
-	Expiry           time.Time          `json:"expiry"` //might not be an actual string but who knows?
-	AllowMultiselect bool               `json:"allow_multiselect"`
-	LayoutType       int                `json:"layout_type,omitempty"`
-	Results          *PollResultsObject `json:"results,omitempty"`
-}
-
-type PollCreateObject struct {
-	Question PollMediaObject    `json:"question"`
-	Answers  []PollAnswerObject `json:"answers"`
-	// Duration is the number of hours. Goes up to 7 days.
+type PollCreate struct {
+	Question PollMedia    `json:"question"`
+	Answers  []PollAnswer `json:"answers"`
+	// Duration is the number of hours. Goes up to 24 * 7.
 	Duration         int  `json:"duration"`
 	AllowMultiselect bool `json:"allow_multiselect"`
 	LayoutType       int  `json:"layout_type,omitempty"` // currently only "1" - the default, is supported
@@ -194,7 +160,7 @@ type Message struct {
 	// An array of StickerItem objects, representing sent stickers, if there were any.
 	StickerItems []*StickerItem `json:"sticker_items"`
 
-	Poll *PollObject `json:"poll,omitempty"`
+	Poll *Poll `json:"poll,omitempty"`
 }
 
 // UnmarshalJSON is a helper function to unmarshal the Message.
@@ -284,7 +250,7 @@ type MessageSend struct {
 	Reference       *MessageReference       `json:"message_reference,omitempty"`
 	StickerIDs      []string                `json:"sticker_ids"`
 	Flags           MessageFlags            `json:"flags,omitempty"`
-	Poll            *PollCreateObject       `json:"poll,omitempty"`
+	Poll            *PollCreate             `json:"poll,omitempty"`
 
 	// TODO: Remove this when compatibility is not required.
 	File *File `json:"-"`

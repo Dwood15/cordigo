@@ -555,7 +555,7 @@ type InteractionResponseData struct {
 	AllowedMentions *MessageAllowedMentions `json:"allowed_mentions,omitempty"`
 	Files           []*File                 `json:"-"`
 	Attachments     *[]*MessageAttachment   `json:"attachments,omitempty"`
-	Poll            *PollObject             `json:"poll,omitempty"`
+	Poll            *Poll                   `json:"poll,omitempty"`
 
 	// NOTE: only MessageFlagsSuppressEmbeds and MessageFlagsEphemeral can be set.
 	Flags MessageFlags `json:"flags,omitempty"`

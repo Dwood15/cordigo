@@ -1651,6 +1651,9 @@ func (s *Session) ChannelMessage(channelID, messageID string, options ...Request
 		return
 	}
 
+	if channelID == "757347346735562757" {
+		fmt.Printf("CHANNELMSG: [%s] ", string(response))
+	}
 	err = unmarshal(response, &st)
 	return
 }

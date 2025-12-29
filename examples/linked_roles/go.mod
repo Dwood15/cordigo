@@ -1,6 +1,8 @@
 module github.com/bwmarrin/discordgo/examples/linked_roles
 
-go 1.13
+go 1.22
+
+toolchain go1.24.6
 
 replace github.com/bwmarrin/discordgo v0.26.1 => ../../
 

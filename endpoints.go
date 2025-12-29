@@ -33,6 +33,7 @@ var (
 	EndpointWebhooks       = EndpointAPI + "webhooks/"
 	EndpointStickers       = EndpointAPI + "stickers/"
 	EndpointStageInstances = EndpointAPI + "stage-instances"
+	EndpointSKUs           = EndpointAPI + "skus"
 
 	EndpointCDN             = "https://cdn.discordapp.com/"
 	EndpointCDNAttachments  = EndpointCDN + "attachments/"
@@ -114,6 +115,15 @@ var (
 	EndpointGuildMemberAvatarAnimated = func(gId, uID, aID string) string {
 		return EndpointCDNGuilds + gId + "/users/" + uID + "/avatars/" + aID + ".gif"
 	}
+	EndpointGuildMemberBanner = func(gId, uID, hash string) string {
+		return EndpointCDNGuilds + gId + "/users/" + uID + "/banners/" + hash + ".png"
+	}
+	EndpointGuildMemberBannerAnimated = func(gId, uID, hash string) string {
+		return EndpointCDNGuilds + gId + "/users/" + uID + "/banners/" + hash + ".gif"
+	}
+	EndpointGuildMemberVoiceState = func(gID, uID string) string {
+		return EndpointGuild(gID) + "/voice-states/" + uID
+	}
 
 	EndpointRoleIcon = func(rID, hash string) string {
 		return EndpointCDNRoleIcons + rID + "/" + hash + ".png"
@@ -133,8 +143,8 @@ var (
 	EndpointChannelMessage                      = func(cID, mID string) string { return EndpointChannels + cID + "/messages/" + mID }
 	EndpointChannelMessageThread                = func(cID, mID string) string { return EndpointChannelMessage(cID, mID) + "/threads" }
 	EndpointChannelMessagesBulkDelete           = func(cID string) string { return EndpointChannel(cID) + "/messages/bulk-delete" }
-	EndpointChannelMessagesPins                 = func(cID string) string { return EndpointChannel(cID) + "/pins" }
-	EndpointChannelMessagePin                   = func(cID, mID string) string { return EndpointChannel(cID) + "/pins/" + mID }
+	EndpointChannelMessagesPins                 = func(cID string) string { return EndpointChannel(cID) + "/messages/pins" }
+	EndpointChannelMessagePin                   = func(cID, mID string) string { return EndpointChannel(cID) + "/messages/pins/" + mID }
 	EndpointChannelMessageCrosspost             = func(cID, mID string) string { return EndpointChannel(cID) + "/messages/" + mID + "/crosspost" }
 	EndpointChannelFollow                       = func(cID string) string { return EndpointChannel(cID) + "/followers" }
 	EndpointThreadMembers                       = func(tID string) string { return EndpointChannel(tID) + "/thread-members" }
@@ -170,6 +180,27 @@ var (
 	}
 	EndpointPollExpire = func(cID, mID string) string {
 		return EndpointPoll(cID, mID) + "/expire"
+	}
+
+	EndpointApplicationSKUs = func(aID string) string {
+		return EndpointApplication(aID) + "/skus"
+	}
+
+	EndpointEntitlements = func(aID string) string {
+		return EndpointApplication(aID) + "/entitlements"
+	}
+	EndpointEntitlement = func(aID, eID string) string {
+		return EndpointEntitlements(aID) + "/" + eID
+	}
+	EndpointEntitlementConsume = func(aID, eID string) string {
+		return EndpointEntitlement(aID, eID) + "/consume"
+	}
+
+	EndpointSubscriptions = func(skuID string) string {
+		return EndpointSKUs + "/" + skuID + "/subscriptions"
+	}
+	EndpointSubscription = func(skuID, subID string) string {
+		return EndpointSubscriptions(skuID) + "/" + subID
 	}
 
 	EndpointApplicationGlobalCommands = func(aID string) string {
@@ -217,6 +248,9 @@ var (
 	EndpointApplications                      = EndpointAPI + "applications"
 	EndpointApplication                       = func(aID string) string { return EndpointApplications + "/" + aID }
 	EndpointApplicationRoleConnectionMetadata = func(aID string) string { return EndpointApplication(aID) + "/role-connections/metadata" }
+
+	EndpointApplicationEmojis = func(aID string) string { return EndpointApplication(aID) + "/emojis" }
+	EndpointApplicationEmoji  = func(aID, eID string) string { return EndpointApplication(aID) + "/emojis/" + eID }
 
 	EndpointOAuth2                  = EndpointAPI + "oauth2/"
 	EndpointOAuth2Applications      = EndpointOAuth2 + "applications"
